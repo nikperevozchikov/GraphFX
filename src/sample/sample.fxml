@@ -26,29 +26,26 @@
         <RowConstraints />
     </rowConstraints>
     <children>
-        <Pane prefHeight="311.0" prefWidth="648.0">
+        <Pane prefHeight="350" prefWidth="650">
             <children>
-                <LineChart fx:id="lineChart" layoutX="-12.0" layoutY="3.0" prefHeight="344.0" prefWidth="468.0" styleClass="chart-series-line" stylesheets="@style.css" title="y=2*x^2+5">
+                <LineChart fx:id="lineChart" layoutX="-12.0" layoutY="3.0" prefHeight="350.0" prefWidth="480.0" styleClass="chart-series-line" stylesheets="@style.css" title="y=2*x^2+5">
                     <xAxis>
                         <CategoryAxis label="X" side="BOTTOM" fx:id="x" />
                     </xAxis>
                     <yAxis>
                         <NumberAxis fx:id="y" label="Y" side="TOP">
-                            <tickLabelFont>
-                                <Font name="System Bold" size="9.0" />
-                            </tickLabelFont>
                         </NumberAxis>
                     </yAxis>
                 </LineChart>
                 <Pane layoutX="456.0" layoutY="-1.0" prefHeight="335.0" prefWidth="193.0">
                     <children>
-                        <Button fx:id="buttonAdd" layoutX="14.0" layoutY="19.0" mnemonicParsing="false" prefWidth="75.0"  text="Добавить" />
-                        <Button fx:id="buttonRemove" layoutX="104.0" layoutY="19.0" mnemonicParsing="false" prefWidth="75.0" text="Удалить" />
-                        <TextField fx:id="textField" layoutX="14.0" layoutY="57.0" prefHeight="25.0" prefWidth="165.0" />
-                        <TableView fx:id="table" layoutX="14.0" layoutY="98.0" prefHeight="219.0" prefWidth="165.0">
+                        <Button fx:id="btnAdd" layoutX="14.0" layoutY="19.0" mnemonicParsing="false" prefWidth="165.0"  text="Добавить" />
+                        <Button fx:id="btnDelete" layoutX="14.0" layoutY="59.0" mnemonicParsing="false" prefWidth="165.0" text="Удалить" />
+                        <TextField fx:id="textField" layoutX="14.0" layoutY="98.0" prefHeight="25.0" prefWidth="165.0" />
+                        <TableView fx:id="table" layoutX="14.0" layoutY="138.0" prefHeight="219.0" prefWidth="165.0">
                             <columns>
-                                <TableColumn fx:id="columX" maxWidth="82.0" prefWidth="82.0" resizable="false" text="X" />
-                                <TableColumn fx:id="columY" maxWidth="82.0" prefWidth="82.0" resizable="false" text="Y" />
+                                <TableColumn fx:id="columnX" maxWidth="82.0" prefWidth="82.0" resizable="false" text="X" />
+                                <TableColumn fx:id="columnY" maxWidth="82.0" prefWidth="82.0" resizable="false" text="Y" />
                             </columns>
                         </TableView>
                     </children>

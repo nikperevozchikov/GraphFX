@@ -20,25 +20,10 @@ import java.util.ResourceBundle;
 public class Controller {
 
     @FXML
-    private ResourceBundle resources;
+    private Button btnAdd;
 
     @FXML
-    private URL location;
-
-    @FXML
-    private LineChart<Double, Double> lineChart;
-
-    @FXML
-    private CategoryAxis x;
-
-    @FXML
-    private NumberAxis y;
-
-    @FXML
-    private Button buttonAdd;
-
-    @FXML
-    private Button buttonRemove;
+    private Button btnDelete;
 
     @FXML
     private TextField textField;
@@ -47,97 +32,88 @@ public class Controller {
     private TableView table;
 
     @FXML
-    private TableColumn<Point, String> columX;
+    private TableColumn<Point, String> columnX;
 
     @FXML
-    private TableColumn<Point, String> columY;
+    private TableColumn<Point, String> columnY;
 
-    private ObservableList<Point> pointList = FXCollections.observableArrayList();
+    @FXML
+    private LineChart<Double, Double> lineChart;
+
+    private ObservableList<Point> points = FXCollections.observableArrayList();
 
     @FXML
     void initialize() {
         update();
         table.setEditable(true);
-        columX.setCellFactory(TextFieldTableCell.forTableColumn());
-        columX.setCellValueFactory(cellData -> new SimpleObjectProperty<String>(Double.toString(cellData.getValue().getX())));
-        columY.setCellValueFactory(cellData -> new SimpleObjectProperty<String>(Double.toString(cellData.getValue().getY())));
-
-        buttonRemove.setOnAction(event -> {
-            removeCell();
-        });
-        buttonAdd.setOnAction(event -> {
+        columnX.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnX.setCellValueFactory(cellData -> new SimpleObjectProperty<String>(Double.toString(cellData.getValue().getX())));
+        columnY.setCellValueFactory(cellData -> new SimpleObjectProperty<String>(Double.toString(cellData.getValue().getY())));
+        btnAdd.setOnAction(event -> {
             if (textField.getText().equals("")) {
-                error("добавлении");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Внимание, введите число");
+                alert.show();
             } else {
                 try {
                     double value = Double.parseDouble(textField.getText());
                     Point point = new Point(value);
                     Model.addPoint(point);
-
                     //textField.clear();
                     update();
-                    refreshGraph();
+                    recount();
                 } catch (Exception e) {
-                    error("добавлении");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Внимание, введите число");
+                    alert.show();
                 }
             }
         });
-        columX.setOnEditCommit((TableColumn.CellEditEvent<Point, String> event) -> {
+        btnDelete.setOnAction(event -> {
+            deleteCell();
+        });
+        columnX.setOnEditCommit((TableColumn.CellEditEvent<Point, String> event) -> {
             try {
                 TablePosition<Point, String> pos = event.getTablePosition();
-
                 String newValue = event.getNewValue();
-
                 int row = pos.getRow();
-              Point point = event.getTableView().getItems().get(row);
+                Point point = event.getTableView().getItems().get(row);
                 Model.setPoint(point.getX(), Double.parseDouble(newValue));
                 point.setX(Double.parseDouble(newValue));
                 table.refresh();
-                refreshGraph();
+                recount();
 
-            } catch (Exception e){
-                error("изменении");
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Внимание, введите число");
+                alert.show();
             }
         });
     }
 
-    public void error(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Ошибка");
-        alert.setHeaderText("Ошибка при " + msg + " точки");
-        alert.setContentText("Это не число");
-        alert.show();
-    }
 
-    public void removeCell() {
-        Point tt = (Point) table.getSelectionModel().getSelectedItem();
-        Model.removePoint(tt);
-        table.getItems().removeAll(tt);
-        refreshGraph();
+    public void deleteCell() {
+        Point point = (Point) table.getSelectionModel().getSelectedItem();
+        Model.removePoint(point);
+        table.getItems().removeAll(point);
+        recount();
     }
 
     public void update() {
-
         table.getItems().removeAll();
-        pointList.clear();
-
-        getDataFromModel();
-
-        table.setItems(pointList);
-
-    }
-
-    public void getDataFromModel(){
-        for (Point p:  Model.getArrayList()) {
-            pointList.add(p);
+        points.clear();
+        for (Point p : Model.getArrayList()) {
+            points.add(p);
         }
+        table.setItems(points);
     }
 
-    public void refreshGraph(){
+
+    public void recount() {
         lineChart.getData().clear();
         XYChart.Series series = new XYChart.Series();
-        for (int i = 0; i < pointList.size(); i++) {
-            series.getData().add(new XYChart.Data<String,Double>(Double.toString(pointList.get(i).getX()), pointList.get(i).getY()));
+        for (int i = 0; i < points.size(); i++) {
+            series.getData().add(new XYChart.Data<String, Double>(Double.toString(points.get(i).getX()), points.get(i).getY()));
         }
         lineChart.getData().addAll(series);
     }
